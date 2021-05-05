@@ -5,7 +5,7 @@
 #library(lavaan)
 
 RICLPM <- '
-# Create between components (random intercepts) 
+# Crear componente entre sujetos (intersecciones aleatorias)  
 RIx =~ 1*ox1 +1*ox3 +  1*ox5 + 1*ox7 + 1*ox9 +  
        1*ox11 + 1*ox13 + 1*ox15 + 1*ox17 + 1*ox19 + 
        1*ox21 + 1*ox23 + 1*ox25 + 1*ox27 + 1*ox29 + 
@@ -17,7 +17,7 @@ RIy =~ 1*oy1 + 1*oy3 + 1*oy5 + 1*oy7 +
        1*oy17 + 1*oy19 + 1*oy21 + 1*oy23 + 1*oy25 +
         1*oy27 +  1*oy29 + 1*oy31 
 
-# Mean structure
+# Estructura de medias
 
 oy1 ~ 1
 oy3 ~ 1
@@ -53,7 +53,7 @@ ox27 ~ 1
 ox29 ~ 1
 ox31 ~ 1
 
-# Create within-person centered variables
+# Crear variables intrasujeto (latentes)
 wx1 =~ 1*ox1
 wx3 =~ 1*ox3 
 wx5 =~ 1*ox5
@@ -89,7 +89,7 @@ wy27 =~ 1*oy27
 wy29 =~ 1*oy29
 wy31 =~ 1*oy31
 
-# Estimate the lagged effects between the within-person centered variables.
+# Estimar los coeficientes autorregresivos en las variables intrasujetos (latentes)
 wy3 ~ (b_y)*wy1
 wy5 ~ (b_y)*wy3
 wy7 ~ (b_y)*wy5
@@ -123,11 +123,7 @@ wx29 ~ (b_x)*wx27
 wx31 ~ (b_x)*wx29
 
 
-
-
-
-# Estimate the cross-lagged effects between the within-person centered variables.
-
+# Estimar los efectos cruzados en las variables intrasujeto (latentes)
 wy3 ~ (g_y)*wx1
 wy5 ~ (g_y)*wx3
 wy7 ~ (g_y)*wx5
@@ -164,7 +160,7 @@ wx31 ~ (g_x)*wy29
 
 
 
-# Estimate the covariances between the residuals of the within-person centered variables. Centradas?*
+# Estimar las covarianzas de los errores dinamicos 
 wx3 ~~ (CvDer) * wy3
 wx5 ~~ (CvDer) * wy5
 wx7 ~~ (CvDer) * wy7
@@ -181,17 +177,19 @@ wx27 ~~ (CvDer) * wy27
 wx29 ~~ (CvDer) * wy29
 wx31 ~~ (CvDer) * wy31
 
-# Estimate the variance and covariance of the random intercepts. 
+# Estimar las varianzas y covarianza de las intersecciones aleatorias  
 RIx ~~ RIx
 RIy ~~ RIy
 
 RIx ~~ RIy
 
-# Estimate the (residual) variance of the within-person centered variables.
-wx1 ~~ wx1 # Variances
+# Estimar la varianza del tiempo 1 en las variables intrasujeto (latentes) 
+wx1 ~~ wx1 # Varianzas
 wy1 ~~ wy1 
 
-wx1 ~~ wy1 # Covariance 
+wx1 ~~ wy1 # Covarianza
+
+# Estimar el error dinámico 
 
 wx3 ~~ (DerX) * wx3 
 wx5 ~~ (DerX) * wx5
@@ -228,7 +226,7 @@ wy31 ~~ (DerY) * wy31
 
 
 
-# Measurement error variance 
+# Error de medida (fijado a 0)
 
 oy1  ~~  0 * oy1 
 oy3  ~~  0 * oy3 
@@ -265,7 +263,7 @@ ox27 ~~ 0 * ox27
 ox29 ~~ 0 * ox29 
 ox31 ~~ 0 * ox31 
 
-# Covariance between measurements error(CvMesYX)
+# Covarianza del error de medida (fijado a 0)
 oy1  ~~ 0* ox1 
 oy3  ~~ 0* ox3 
 oy5  ~~ 0* ox5
